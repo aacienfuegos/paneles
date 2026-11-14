@@ -10,6 +10,19 @@ y su API de escritura. Los agentes escriben por la API con un token; el navegado
 - Imagen: `ghcr.io/aacienfuegos/paneles`, escucha en el 3000, corre como `1001:1001` y solo escribe en
   `/datos` y `/tmp`. Se despliega en el LXC 102 por digest; la CI la publica y no despliega.
 
+## API y tokens
+
+El contrato está en el documento `contrato-api` de CIE-873. Todo `/api/` salvo `/api/health` pide
+`Authorization: Bearer <token>`; las escrituras quedan en la tabla `escrituras` con el `X-Paperclip-Run-Id`.
+
+Los tokens se gestionan dentro del contenedor y solo se guarda su SHA-256:
+
+```bash
+docker compose exec paneles node scripts/tokens.mjs crear --agente investigador --paneles compras
+docker compose exec paneles node scripts/tokens.mjs revocar --agente investigador
+docker compose exec paneles node scripts/tokens.mjs listar
+```
+
 ## CI
 
 Los workflows viven en `ci/workflows/` hasta que se copian a `.github/workflows/`: la App de los agentes
