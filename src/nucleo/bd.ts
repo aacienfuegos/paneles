@@ -8,6 +8,31 @@ export interface Migracion {
   readonly sql: string;
 }
 
+const NUCLEO: readonly Migracion[] = [
+  {
+    id: "nucleo-001",
+    sql: `
+      CREATE TABLE tokens (
+        id INTEGER PRIMARY KEY,
+        agente TEXT NOT NULL,
+        paneles TEXT NOT NULL,
+        hash TEXT NOT NULL UNIQUE,
+        creado TEXT NOT NULL,
+        revocado TEXT
+      );
+      CREATE TABLE escrituras (
+        id INTEGER PRIMARY KEY,
+        hora TEXT NOT NULL,
+        agente TEXT NOT NULL,
+        run TEXT,
+        metodo TEXT NOT NULL,
+        ruta TEXT NOT NULL,
+        codigo INTEGER NOT NULL
+      );
+    `,
+  },
+];
+
 // La instrumentación y las rutas se empaquetan por separado: sin la caché global cada una abriría su conexión.
 const cache = globalThis as typeof globalThis & { panelesBd?: Bd };
 
@@ -28,7 +53,7 @@ export function abrir(ruta: string): Bd {
   bd.pragma("journal_mode = WAL");
   bd.pragma("foreign_keys = ON");
   bd.pragma("busy_timeout = 5000");
-  migrar(bd, MODULOS.flatMap((m) => m.migraciones));
+  migrar(bd, [...NUCLEO, ...MODULOS.flatMap((m) => m.migraciones)]);
   return bd;
 }
 

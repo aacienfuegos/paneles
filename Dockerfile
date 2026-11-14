@@ -31,6 +31,7 @@ RUN addgroup -S -g 1001 paneles \
 # El código es de root: el proceso, como 1001, solo puede escribir en /datos y /tmp.
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/scripts/tokens.mjs ./scripts/tokens.mjs
 RUN node -e "new (require('better-sqlite3'))(':memory:').close()"
 
 USER 1001:1001
