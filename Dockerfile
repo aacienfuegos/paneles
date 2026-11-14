@@ -13,6 +13,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 FROM base AS runner
+# Liga el paquete de ghcr.io al repo en la primera publicación.
+LABEL org.opencontainers.image.source=https://github.com/aacienfuegos/paneles
 WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
