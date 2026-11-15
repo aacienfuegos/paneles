@@ -1,0 +1,27 @@
+# Rutas de nivel 2 (CIE-251, CIE-1184): su cambio lo aprueba Andrés. El resto de main lo mergea
+# un agente (nivel 1) cuando pasa sus etapas y los checks.
+# Sin regla "*": los PR que no tocan estas rutas no le piden revisión.
+# Van también las que aún no existen, para que un fichero nuevo nazca con dueño.
+# Este repo es el directorio de trabajo de los runs del proyecto paneles: el CLI de los agentes
+# ejecuta lo que pongan CLAUDE.md y .claude/ antes de leer nada.
+
+/.github/ @aacienfuegos
+.claude/ @aacienfuegos
+.mcp.json @aacienfuegos
+CLAUDE.md @aacienfuegos
+AGENTS.md @aacienfuegos
+.husky/ @aacienfuegos
+.githooks/ @aacienfuegos
+.envrc @aacienfuegos
+.env* @aacienfuegos
+.vscode/ @aacienfuegos
+
+# Gate de npm audit (CIE-1210): el script, sus excepciones, lo que valida y lo que npm leería en su lugar.
+# ci/ entra porque es donde se propone un workflow antes de copiarlo a .github/workflows/.
+/ci/ @aacienfuegos
+/scripts/npm-audit.mjs @aacienfuegos
+/scripts/audit-exceptions.json @aacienfuegos
+package.json @aacienfuegos
+package-lock.json @aacienfuegos
+npm-shrinkwrap.json @aacienfuegos
+.npmrc @aacienfuegos
