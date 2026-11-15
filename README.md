@@ -29,10 +29,13 @@ Los workflows viven en `ci/workflows/` hasta que se copian a `.github/workflows/
 no tiene el permiso `workflows`. Un cambio en un workflow se propone en `ci/workflows/` y lo copia Andrés.
 
 - `Type check, tests y build`: el gate de dependencias, `tsc`, Vitest y `next build`, en cada PR a `main` y
-  en cada push a `main`. El gate (`scripts/npm-audit.mjs`, el mismo de TripPlanner) va antes de `npm ci`:
-  exige que cada entrada del lockfile salga del registry de npm con el nombre de su clave, `integrity`
-  `sha512-` y sin `link` ni `npm-shrinkwrap.json`, y después para con cualquier advisory high o critical
-  que no esté en `scripts/audit-exceptions.json` (por GHSA y paquete, con caducidad de 90 días como mucho).
+  en cada push a `main`. El gate (`scripts/npm-audit.mjs`, el de TripPlanner, que se lleva este cambio en
+  CIE-1211) va antes de `npm ci`: exige que cada entrada del lockfile salga del registry de npm con el
+  nombre de su clave, `integrity` `sha512-` y sin `link` ni `npm-shrinkwrap.json`, y que sus
+  `dependencies`, `optionalDependencies`, `peerDependencies` y `hasInstallScript` sean los del manifiesto
+  publicado de ese nombre y versión (si no puede leerlo, para). Después para con cualquier advisory high o
+  critical que no esté en `scripts/audit-exceptions.json` (por GHSA y paquete, con caducidad de 90 días
+  como mucho).
 - `Imagen, prueba de humo y Trivy`: construye la imagen y la arranca como en el 102
   (`scripts/humo-imagen.sh`).
 - `Publicar en ghcr.io`: solo en push a `main`, sube la imagen que pasó la prueba. Es el único job con
