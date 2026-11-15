@@ -87,6 +87,9 @@ describe("scripts/npm-audit.mjs", () => {
     ["integrity que no es sha512", (p) => Object.assign(zod(p), { integrity: "sha1-abc" }), "integrity"],
     ["alias por name", (p) => Object.assign(zod(p), { name: "zod-malo" }), "name zod-malo"],
     ["link fuera de los workspaces", (p) => Object.assign(zod(p), { link: true, resolved: "../../tmp/x" }), "workspace"],
+    ["dependencies como array", (p) => Object.assign(zod(p), { dependencies: ["0.0.0"] }), "dependencies no es un objeto"],
+    ["dependencies como string", (p) => Object.assign(zod(p), { dependencies: "*" }), "dependencies no es un objeto"],
+    ["peerDependencies con un rango que no es string", (p) => Object.assign(zod(p), { peerDependencies: { ms: 2 } }), "peerDependencies no es un objeto"],
   ])("para un lockfile con %s", (_, cambiar, motivo) => {
     const r = gate(cambiar);
     expect(r.status).toBe(1);

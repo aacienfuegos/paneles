@@ -157,6 +157,11 @@ async function checkLockfile() {
     if ("name" in entry && entry.name !== name) return [`${key}: name ${entry.name} no coincide con la clave`];
     if (entry.resolved !== resolved) return [`${key}: resolved ${entry.resolved} no es ${resolved}`];
     if (new URL(resolved).href !== resolved) return [`${key}: resolved cambia al normalizar la URL`];
+    // Arborist saca aristas de un array o un string con Object.entries: si no, checkEdges los compararía como vacíos.
+    const malformed = EDGES.filter(
+      (f) => Object.hasOwn(entry, f) && !(isObject(entry[f]) && Object.values(entry[f]).every((r) => typeof r === "string")),
+    );
+    if (malformed.length > 0) return [`${key}: ${malformed.join(", ")} no es un objeto de nombre y rango`];
     fromRegistry.push({ key, name, entry });
     return [];
   });
