@@ -13,5 +13,5 @@ AGENTS.md @aacienfuegos
 .husky/ @aacienfuegos
 .githooks/ @aacienfuegos
 .envrc @aacienfuegos
-.env @aacienfuegos
+.env* @aacienfuegos
 .vscode/ @aacienfuegos
