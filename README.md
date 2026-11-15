@@ -28,8 +28,11 @@ docker compose exec paneles node scripts/tokens.mjs listar
 Los workflows viven en `ci/workflows/` hasta que se copian a `.github/workflows/`: la App de los agentes
 no tiene el permiso `workflows`. Un cambio en un workflow se propone en `ci/workflows/` y lo copia Andrés.
 
-- `Type check, tests y build`: `npm audit`, `tsc`, Vitest y `next build`, en cada PR a `main` y en cada
-  push a `main`.
+- `Type check, tests y build`: el gate de dependencias, `tsc`, Vitest y `next build`, en cada PR a `main` y
+  en cada push a `main`. El gate (`scripts/npm-audit.mjs`, el mismo de TripPlanner) va antes de `npm ci`:
+  exige que cada entrada del lockfile salga del registry de npm con el nombre de su clave, `integrity`
+  `sha512-` y sin `link` ni `npm-shrinkwrap.json`, y después para con cualquier advisory high o critical
+  que no esté en `scripts/audit-exceptions.json` (por GHSA y paquete, con caducidad de 90 días como mucho).
 - `Imagen, prueba de humo y Trivy`: construye la imagen y la arranca como en el 102
   (`scripts/humo-imagen.sh`).
 - `Publicar en ghcr.io`: solo en push a `main`, sube la imagen que pasó la prueba. Es el único job con
