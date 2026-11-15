@@ -12,7 +12,7 @@ abrir(ruta).close();
 
 function tokens(...args: string[]): { status: number | null; stdout: string } {
   const r = spawnSync(process.execPath, [resolve("scripts/tokens.mjs"), ...args], {
-    env: { PATH: process.env.PATH, PANELES_DB: ruta },
+    env: { NODE_ENV: "test", PATH: process.env.PATH, PANELES_DB: ruta },
     encoding: "utf8",
   });
   return { status: r.status, stdout: r.stdout };
