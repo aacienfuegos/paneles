@@ -55,6 +55,25 @@ describe("autenticación", () => {
     ]);
   });
 
+  it("con un token de otro panel, 403 también en los listados", async () => {
+    await alta();
+    await observar({ precio: 129.99 });
+    const otro = token(["viajes"], "otro-agente");
+    const listar = (quien: string) => [
+      productos.GET(peticion("GET", "/api/compras/productos", { token: quien }), SIN_PARAMS),
+      precios.GET(peticion("GET", `/api/compras/precios?producto=${ID}`, { token: quien }), SIN_PARAMS),
+    ];
+    for (const r of await Promise.all(listar(otro))) {
+      expect(r.status).toBe(403);
+      expect(await r.json()).toMatchObject({ error: "prohibido" });
+    }
+    const [lista, historial] = await Promise.all(listar(t));
+    expect(lista.status).toBe(200);
+    expect(await lista.json()).toMatchObject([{ id: ID }]);
+    expect(historial.status).toBe(200);
+    expect(await historial.json()).toMatchObject([{ precio: 129.99 }]);
+  });
+
   it("no hay DELETE en ninguna ruta (Next.js responde 405)", () => {
     for (const ruta of [productos, unProducto, precios]) expect(Object.keys(ruta)).not.toContain("DELETE");
   });
