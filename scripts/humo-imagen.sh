@@ -33,6 +33,25 @@ test "$(docker exec "$nombre" id -u):$(docker exec "$nombre" id -g)" = "1001:100
 docker exec "$nombre" test -s /datos/paneles.db
 test "$(curl -s -o /dev/null -w '%{http_code}' "$url/")" = 200
 
+# La API con un token creado como lo hará Andrés en el 102, y la página que lo pinta.
+token=$(docker exec "$nombre" node scripts/tokens.mjs crear --agente humo --paneles compras)
+test "$(curl -s -o /dev/null -w '%{http_code}' "$url/api/compras/productos")" = 401
+test "$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $token" "$url/api/compras/productos")" = 200
+test "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer $token" \
+  -H 'Content-Type: application/json' --data-binary @- "$url/api/compras/productos" <<'JSON'
+{"id": "humo-producto", "nombre": "Producto de humo", "precioObjetivo": 140, "hasta": "2026-12-01",
+ "tiendas": ["amazon.es"], "frecuencia": "semanal", "issueOrigen": "CIE-887",
+ "tarjetaAprobacion": "f65b67b1-2c3d-4e5f-8a9b-0c1d2e3f4a5b"}
+JSON
+)" = 201
+pagina=$(curl -fsS -D /tmp/humo-cabeceras "$url/compras")
+grep -q 'Producto de humo' <<<"$pagina"
+grep -qi "^content-security-policy: default-src 'self'; script-src 'self' 'nonce-" /tmp/humo-cabeceras
+grep -qi '^x-content-type-options: nosniff' /tmp/humo-cabeceras
+grep -qi '^referrer-policy: no-referrer' /tmp/humo-cabeceras
+# Que Next.js aplica el nonce: todos los <script> de la página lo llevan.
+test "$(grep -o '<script' <<<"$pagina" | wc -l)" = "$(grep -oE '<script[^>]* nonce="[^"]+"' <<<"$pagina" | wc -l)"
+
 for _ in $(seq 1 12); do
   [ "$(docker inspect -f '{{.State.Health.Status}}' "$nombre")" = healthy ] && break
   sleep 5

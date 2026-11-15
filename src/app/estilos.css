@@ -1,0 +1,102 @@
+:root {
+  --fondo: #f9f9f7;
+  --superficie: #fcfcfb;
+  --tinta: #0b0b0b;
+  --tinta-2: #52514e;
+  --borde: #e1e0d9;
+  --serie: #2a78d6;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #0d0d0d;
+    --superficie: #1a1a19;
+    --tinta: #f0efec;
+    --tinta-2: #c3c2b7;
+    --borde: #2c2c2a;
+    --serie: #3987e5;
+  }
+}
+
+body {
+  margin: 0 auto;
+  max-width: 48rem;
+  padding: 1rem;
+  font-family: system-ui, sans-serif;
+  background: var(--fondo);
+  color: var(--tinta);
+}
+
+a {
+  color: var(--serie);
+}
+
+.producto {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 0.5rem;
+  background: var(--superficie);
+}
+
+.producto h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.veredicto {
+  font-weight: 600;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.25rem 1rem;
+}
+
+dt {
+  color: var(--tinta-2);
+}
+
+dd {
+  margin: 0;
+}
+
+.grafica {
+  margin: 0;
+}
+
+.grafica svg {
+  width: 100%;
+  height: auto;
+}
+
+.grafica figcaption {
+  color: var(--tinta-2);
+  font-size: 0.85rem;
+}
+
+.grafica .objetivo {
+  stroke: var(--tinta-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.grafica .etiqueta {
+  fill: var(--tinta-2);
+  font-size: 12px;
+}
+
+.grafica .linea {
+  fill: none;
+  stroke: var(--serie);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.grafica .punto {
+  fill: var(--serie);
+  stroke: var(--superficie);
+  stroke-width: 2;
+}

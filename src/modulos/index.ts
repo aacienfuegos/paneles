@@ -1,3 +1,4 @@
+import { compras } from "@/modulos/compras";
 import type { Migracion } from "@/nucleo/bd";
 
 export interface Modulo {
@@ -6,4 +7,4 @@ export interface Modulo {
   readonly migraciones: readonly Migracion[];
 }
 
-export const MODULOS: readonly Modulo[] = [];
+export const MODULOS: readonly Modulo[] = [compras];
