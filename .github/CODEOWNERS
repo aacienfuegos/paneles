@@ -15,3 +15,13 @@ AGENTS.md @aacienfuegos
 .envrc @aacienfuegos
 .env* @aacienfuegos
 .vscode/ @aacienfuegos
+
+# Gate de npm audit (CIE-1210): el script, sus excepciones, lo que valida y lo que npm leería en su lugar.
+# ci/ entra porque es donde se propone un workflow antes de copiarlo a .github/workflows/.
+/ci/ @aacienfuegos
+/scripts/npm-audit.mjs @aacienfuegos
+/scripts/audit-exceptions.json @aacienfuegos
+package.json @aacienfuegos
+package-lock.json @aacienfuegos
+npm-shrinkwrap.json @aacienfuegos
+.npmrc @aacienfuegos
