@@ -32,8 +32,14 @@ no tiene el permiso `workflows`. Un cambio en un workflow se propone en `ci/work
   en cada push a `main`. El gate (`scripts/npm-audit.mjs`, el de TripPlanner, que se lleva este cambio en
   CIE-1211) va antes de `npm ci`: exige que cada entrada del lockfile salga del registry de npm con el
   nombre de su clave, `integrity` `sha512-` y sin `link` ni `npm-shrinkwrap.json`, y que sus
-  `dependencies`, `optionalDependencies`, `peerDependencies` y `hasInstallScript` sean los del manifiesto
-  publicado de ese nombre y versión (si no puede leerlo, para). Después para con cualquier advisory high o
+  `dependencies`, `optionalDependencies`, `peerDependencies`, `bundleDependencies` y `hasInstallScript`
+  sean los del manifiesto publicado de ese nombre y versión (si no puede leerlo, para). La excepción son
+  las entradas `inBundle`, que npm escribe sin `resolved` ni `integrity`: el gate descarga el tarball de su
+  padre, lo comprueba contra la `integrity` `sha512-` del padre y, con `tar`, exige que el `package.json`
+  de cada una esté dentro como un único fichero regular, con su `name`, su `version` y las mismas aristas
+  (si no puede descargarlo o leerlo, para). Solo ve los empaquetados que lista el lockfile: lo que trae un
+  tarball sin entrada en el lockfile lo instala npm sin que el gate ni `npm audit` lo vean. Después para
+  con cualquier advisory high o
   critical que no esté en `scripts/audit-exceptions.json` (por GHSA y paquete, con caducidad de 90 días
   como mucho).
 - `Imagen, prueba de humo y Trivy`: construye la imagen y la arranca como en el 102
